@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.pagination import LimitOffsetPagination
 
 from posts.models import Post, Comment, Group, Follow
 from .serializers import (CommentSerializer, PostSerializer,
@@ -10,6 +11,7 @@ class PostViewSet(ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = LimitOffsetPagination
 
 
 class CommentViewSet(ModelViewSet):
