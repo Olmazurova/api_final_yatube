@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from posts.models import Post, Comment, Group, Follow
-from .serializers import CommentSerializer, PostSerializer
+from .serializers import (CommentSerializer, PostSerializer,
+                          GroupSerializer, FollowSerializer)
 
 
 class PostViewSet(ModelViewSet):
@@ -24,9 +25,11 @@ class GroupViewSet(ReadOnlyModelViewSet):
     """Представление API для модели Group."""
 
     queryset = Group.objects.all()
+    serializer_class = GroupSerializer
 
 
 class FollowViewSet(ModelViewSet):
     """Представление API для модели Follow."""
 
     queryset = Follow.objects.all()
+    serializer_class = FollowSerializer
