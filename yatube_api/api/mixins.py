@@ -15,4 +15,4 @@ class AuthorFieldMixin(serializers.ModelSerializer):
 class PermissionMixin:
     """Миксин добавляет permission_classes во вьюсет."""
 
-    permission_classes = [IsAuthenticatedOrReadOnly, AuthorOrReadOnly,]
+    permission_classes = [IsAuthenticatedOrReadOnly, AuthorOrReadOnly]

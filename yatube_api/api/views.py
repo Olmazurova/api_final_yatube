@@ -31,7 +31,7 @@ class CommentViewSet(PermissionMixin, ModelViewSet):
         return Comment.objects.filter(post=self.kwargs.get('post_id'))
 
     def perform_create(self, serializer):
-        post = get_object_or_404(Post,id=self.kwargs.get('post_id'))
+        post = get_object_or_404(Post, id=self.kwargs.get('post_id'))
         return serializer.save(author=self.request.user, post=post)
 
 
@@ -46,8 +46,8 @@ class FollowViewSet(ModelViewSet):
     """Представление API для модели Follow."""
 
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated,]
-    filter_backends = [filters.SearchFilter,]
+    permission_classes = [IsAuthenticated, ]
+    filter_backends = [filters.SearchFilter, ]
     search_fields = ('following__username',)
 
     def get_queryset(self):
