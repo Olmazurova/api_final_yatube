@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from posts.models import Comment, Post, Group, Follow
+from posts.models import Comment, Follow, Group, Post
 from .mixins import AuthorFieldMixin
 
 User = get_user_model()
