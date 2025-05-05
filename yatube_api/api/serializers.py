@@ -1,24 +1,21 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from posts.models import Comment, Post, Group, Follow
+from .mixins import AuthorFieldMixin
+
 User = get_user_model()
 
 
-from posts.models import Comment, Post, Group, Follow
-
-
-class PostSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(slug_field='username', read_only=True)
+class PostSerializer(AuthorFieldMixin, serializers.ModelSerializer):
 
     class Meta:
         fields = '__all__'
         model = Post
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        read_only=True, slug_field='username'
-    )
+class CommentSerializer(AuthorFieldMixin, serializers.ModelSerializer):
+
     post = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:

@@ -9,26 +9,24 @@ from rest_framework.exceptions import ValidationError
 from posts.models import Post, Comment, Group, Follow
 from .serializers import (CommentSerializer, PostSerializer,
                           GroupSerializer, FollowSerializer)
-from .permissions import AuthorOrReadOnly
+from .mixins import PermissionMixin
 
 
-class PostViewSet(ModelViewSet):
+class PostViewSet(PermissionMixin, ModelViewSet):
     """Представление API для модели Post."""
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = [IsAuthenticatedOrReadOnly, AuthorOrReadOnly,]
 
     def perform_create(self, serializer):
         return serializer.save(author=self.request.user)
 
 
-class CommentViewSet(ModelViewSet):
+class CommentViewSet(PermissionMixin, ModelViewSet):
     """Представление API для модели Comment."""
 
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, AuthorOrReadOnly,]
 
     def get_queryset(self):
         return Comment.objects.filter(post=self.kwargs.get('post_id'))
@@ -43,7 +41,6 @@ class GroupViewSet(ReadOnlyModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 
 class FollowViewSet(ModelViewSet):
