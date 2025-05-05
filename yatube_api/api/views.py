@@ -17,6 +17,9 @@ class PostViewSet(ModelViewSet):
     pagination_class = LimitOffsetPagination
     permission_classes = [IsAuthenticatedOrReadOnly, AuthorOrReadOnly,]
 
+    def perform_create(self, serializer):
+        return serializer.save(author=self.request.user)
+
 
 class CommentViewSet(ModelViewSet):
     """Представление API для модели Comment."""
@@ -33,6 +36,7 @@ class GroupViewSet(ReadOnlyModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly,]
 
 
 class FollowViewSet(ModelViewSet):
