@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
+from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Comment, Follow, Group, Post
 from .mixins import AuthorFieldMixin
@@ -31,7 +33,11 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    user = serializers.SlugRelatedField(
+        slug_field='username',
+        default=CurrentUserDefault(),
+        read_only=True
+    )
     following = serializers.SlugRelatedField(
         slug_field='username',
         queryset=User.objects.all()
@@ -40,3 +46,15 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ('user', 'following')
         model = Follow
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Follow.objects.all(), fields=['user', 'following']
+            )
+        ]
+
+    def validate_following(self, value):
+        if value == self.context.get('request').user:
+            raise serializers.ValidationError(
+                'Пользователь не может быть подписан сам на себя.'
+            )
+        return value
